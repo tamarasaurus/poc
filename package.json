@@ -9,6 +9,7 @@
     "start": "node server/server.js"
   },
   "dependencies": {
+    "create-react-app": "^1.5.2",
     "express": "^4.16.2",
     "express-http-proxy": "^1.1.0",
     "express-session": "^1.15.6",

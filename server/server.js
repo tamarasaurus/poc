@@ -1,8 +1,10 @@
 const express = require('express')
 const session = require('express-session')
 const proxy = require('express-http-proxy');
+const serveStatic = require('serve-static')
 
 const Auth = require('./auth')
+const api_url = '/api/rest/v1/'
 const auth = new Auth()
 const config = require('../config.json')
 const app = express()
@@ -27,7 +29,12 @@ app.use(function setToken (req, res, next) {
   }
 })
 
-app.use('/', proxy(config.base_url, {
+app.use('/', serveStatic('frontend/build', {'index': ['index.html']}))
+
+app.use('/pim', proxy(config.base_url, {
+	filter: function(req, res) {
+	    return req.originalUrl.indexOf('/pim') > -1
+	 },
 	proxyReqOptDecorator: function(proxyReq, srcReq) {
 	  const token = srcReq.session.token;
 	  proxyReq.headers['Authorization'] = `Bearer ${token}`;
